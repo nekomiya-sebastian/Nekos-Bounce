@@ -1,0 +1,10 @@
+cat game where you click to make the cat jump
+	jump to platform, collect worms, ???
+	maybe each level you have to design the perfect bounce, trying to bounce off of things to hit
+		all the items you want to score points
+	maybe you go up and up on a tower - each try you restart from the bottom, upgrades let you
+		get more points or get higher with each jump
+	
+	something you can hit that spawns more bouncy nekos
+	springs & trampolines that bounce you higher
+	hoops you can jump through to gain bonus points or smth
