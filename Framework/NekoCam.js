@@ -6,7 +6,7 @@ class NekoCam
 		
 		// modifiable vals
 		this.camSize = new Vec2( 5,3.5 )
-		this.pixelSize = 24
+		this.pixelSize = NekoCam.PixelSize
 		
 		const camHSize = this.camSize.Copy().Divide( 2 )
 		this.camRect = new Rect( -camHSize.y,camHSize.y,-camHSize.x,camHSize.x )
@@ -72,4 +72,11 @@ class NekoCam
 	{
 		return( worldPos.Copy().Scale( this.scale * this.pixelSize ).Add( this.screenHSize ) )
 	}
+	
+	GetCamArea()
+	{
+		return( this.camRect )
+	}
 }
+
+NekoCam.PixelSize = 24

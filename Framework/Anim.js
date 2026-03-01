@@ -22,14 +22,11 @@ class Anim
 		return( false )
 	}
 	
-	Draw( pos,gfx,flipped = false )
+	Draw( pos,nekoCam,flipped = false )
 	{
-		this.sprs[this.curFrame.GetCurItem()].Draw( pos.x,pos.y,gfx,flipped )
-	}
-	
-	PartDraw( pos,gfx,flipped,scale )
-	{
-		this.sprs[this.curFrame.GetCurItem()].Draw( pos.x,pos.y,gfx,flipped,scale )
+		// this.sprs[this.curFrame.GetCurItem()].Draw( pos.x,pos.y,gfx,flipped )
+		nekoCam.DrawSprite( this.sprs[this.curFrame.GetCurItem()],
+			pos,flipped )
 	}
 	
 	Reset()
@@ -52,7 +49,7 @@ class Anim
 	
 	GetSize()
 	{
-		return( this.sprs[0].size )
+		return( this.sprs[0].rect.GetSize() )
 	}
 	
 	Loaded()

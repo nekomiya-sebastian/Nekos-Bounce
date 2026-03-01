@@ -8,22 +8,27 @@ class Main
 		this.nekoCam = new NekoCam( this.gfx )
 		this.gfx.SetNekoCam( this.nekoCam )
 		
-		this.testImg = new Sprite( "Images/Cat1.png" )
-		this.imgPos = new Vec2( 0,0 )
+		// this.testImg = new Sprite( "Images/Cat1.png" )
+		// this.imgPos = new Vec2( 0,0 )
+		
+		this.bouncingNeko = new BouncingNeko( Vec2.Zero() )
 	}
 	
 	Update( dt )
 	{
+		this.bouncingNeko.Update( this.mouse,this.nekoCam,dt )
 	}
 	
 	Draw()
 	{
 		this.nekoCam.DrawCamArea()
 		
-		this.nekoCam.DrawSprite( this.testImg,this.imgPos )
+		// this.nekoCam.DrawSprite( this.testImg,this.imgPos )
+		
+		this.bouncingNeko.Draw( this.nekoCam )
 		
 		const mousePos = this.nekoCam.Scr2WorldPos( new Vec2( this.mouse.x,this.mouse.y ) )
-		this.nekoCam.DrawRect( mousePos,0.2,0.2,"red" )
+		this.nekoCam.DrawRect( mousePos,0.1,0.1,"red" )
 	}
 }
 
