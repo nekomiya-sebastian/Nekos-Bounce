@@ -33,7 +33,7 @@ class NekoCam
 	MoveCam( move )
 	{
 		this.camPos.Add( move )
-		this.camRect.MoveBy( move )
+		this.camRect.MoveTo( this.camPos.Copy().Subtract( this.camRect.GetSize().Scale( 0.5 ) ) )
 	}
 	
 	// worldPos in world coords, not screen coords
