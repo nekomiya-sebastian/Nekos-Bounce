@@ -14,9 +14,9 @@ class BouncingNeko
 		this.lookDir = new Vec2( NekoUtils.Choose() ? 1 : -1,0 )
 		
 		this.vel = Vec2.Zero()
-		this.jumpPow = 0.15
-		this.jumpUpForce = 0.08
-		this.grav = 0.01
+		this.jumpPow = 0.15 * 24
+		this.jumpUpForce = 0.08 * 24
+		this.grav = 0.01 * 24
 		this.jumping = false
 	}
 	
@@ -34,7 +34,7 @@ class BouncingNeko
 			let canMove = true
 			
 			if( testPos.x < nekoCam.GetCamArea().left + this.hSize.x ) this.vel.x = Math.abs( this.vel.x )
-			if( testPos.x > nekoCam.GetCamArea().right - this.hSize.x ) this.vel.x = -Math.abs( this.vel.x )
+			else if( testPos.x > nekoCam.GetCamArea().right - this.hSize.x ) this.vel.x = -Math.abs( this.vel.x )
 			
 			if( testPos.y > nekoCam.GetCamArea().bot - this.hSize.y )
 			{
@@ -56,9 +56,9 @@ class BouncingNeko
 		{
 			this.loaded = true
 			
-			this.hitbox = new Hitbox( this.pos.x,this.pos.y,
-				this.idleAnim.GetSize().x / NekoCam.PixelSize,
-				this.idleAnim.GetSize().y / NekoCam.PixelSize )
+			this.hitbox = new Hitbox( 0,0,
+				this.idleAnim.GetSize().x,
+				this.idleAnim.GetSize().y )
 			
 			this.hSize = this.hitbox.GetSize().Copy().Divide( 2 )
 		}
@@ -66,19 +66,17 @@ class BouncingNeko
 	
 	Draw( nekoCam )
 	{
-		// if( this.hitbox != null ) this.hitbox.Draw( gfx )
+		if( this.hitbox != null ) this.hitbox.Draw( nekoCam,"orange" )
 		
 		if( this.loaded )
 		{
-			const drawPos = this.pos.Copy()
-			
 			if( this.jumping )
 			{
-				nekoCam.DrawSprite( BouncingNeko.jumpSpr,drawPos,this.vel.x > 0.0 )
+				nekoCam.DrawSprite( BouncingNeko.jumpSpr,this.pos,this.vel.x > 0.0 )
 			}
 			else
 			{
-				this.idleAnim.Draw( drawPos,nekoCam,this.lookDir.x > 0.0 )
+				this.idleAnim.Draw( this.pos,nekoCam,this.lookDir.x > 0.0 )
 			}
 		}
 	}

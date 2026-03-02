@@ -12,11 +12,29 @@ class Main
 		// this.imgPos = new Vec2( 0,0 )
 		
 		this.bouncingNeko = new BouncingNeko( Vec2.Zero() )
+		
+		this.fishes = []
+		// these can spawn on the edge of the screen
+		Fish.spr.AddLoadFunc( this.SpawnFish,this )
+		
+		this.testHitbox = new Hitbox( 0,0,10,10 )
 	}
 	
 	Update( dt )
 	{
 		this.bouncingNeko.Update( this.mouse,this.nekoCam,dt )
+		
+		for( let i = 0; i < this.fishes.length; ++i )
+		{
+			if( this.fishes[i].hitbox && this.bouncingNeko.hitbox.Overlaps( this.fishes[i].hitbox ) )
+			{
+				this.fishes[i].testCol = "green"
+			}
+			else this.fishes[i].testCol = "blue"
+		}
+		
+		const mousePos = this.nekoCam.Scr2WorldPos( new Vec2( this.mouse.x,this.mouse.y  ) )
+		this.testHitbox.MoveTo( mousePos.x,mousePos.y )
 	}
 	
 	Draw()
@@ -25,10 +43,25 @@ class Main
 		
 		// this.nekoCam.DrawSprite( this.testImg,this.imgPos )
 		
+		for( const fish of this.fishes ) fish.Draw( this.nekoCam )
+		
 		this.bouncingNeko.Draw( this.nekoCam )
 		
+		this.testHitbox.Draw( this.nekoCam,this.bouncingNeko.hitbox.Overlaps( this.testHitbox )
+			? "green" : "red" )
+		
 		const mousePos = this.nekoCam.Scr2WorldPos( new Vec2( this.mouse.x,this.mouse.y ) )
-		this.nekoCam.DrawRect( mousePos,0.1,0.1,"red" )
+		this.nekoCam.DrawRect( mousePos,2,2,"red",true )
+	}
+	
+	SpawnFish( self )
+	{
+		if( !self.fishSpawnArea )
+		{
+			self.fishSpawnArea = self.nekoCam.GetCamArea().Copy().ShrinkXY( Fish.spr.GetSize() )
+		}
+		
+		self.fishes.push( new Fish( self.fishSpawnArea.GetRandPos() ) )
 	}
 }
 

@@ -5,8 +5,8 @@ class NekoCam
 		this.gfx = gfx
 		
 		// modifiable vals
-		this.camSize = new Vec2( 5,3.5 )
-		this.pixelSize = NekoCam.PixelSize
+		const pixelSize = 24 // # of pixels per unit
+		this.camSize = new Vec2( 5,3.5 ).Scale( pixelSize )
 		
 		const camHSize = this.camSize.Copy().Divide( 2 )
 		this.camRect = new Rect( -camHSize.y,camHSize.y,-camHSize.x,camHSize.x )
@@ -24,53 +24,58 @@ class NekoCam
 		
 		const xScale = self.gfx.width / self.camSize.x
 		const yScale = self.gfx.height / self.camSize.y
-		self.scale = Math.min( xScale,yScale ) / self.pixelSize
+		self.scale = Math.min( xScale,yScale )
 	}
 	
 	// worldPos in world coords, not screen coords
-	DrawSprite( spr,worldPos,flipped = false )
+	DrawSprite( spr,worldPos,flipped = false,centered = true )
 	{
 		if( spr.loaded )
 		{
 			const rectRect = Rect.FromXYWH( spr.rect.left,spr.rect.top,
-				spr.rect.GetWidth() / this.pixelSize,spr.rect.GetHeight() / this.pixelSize )
-			if( this.camRect.OverlapsAt( rectRect,worldPos.Copy().Subtract( rectRect.GetHalfSize() ) ) )
+				spr.rect.GetWidth(),spr.rect.GetHeight() )
+			rectRect.MoveTo( worldPos )
+			if( centered ) rectRect.MoveBy( rectRect.GetHalfSize().Scale( -1 ) )
+			if( this.camRect.Overlaps( rectRect ) )
 			{
 				const drawPos = this.World2ScrPos( worldPos )
-					.Subtract( spr.rect.GetHalfSize().Scale( this.scale ) )
+				if( centered ) drawPos.Subtract( spr.rect.GetHalfSize().Scale( this.scale ) )
 				this.gfx.DrawSprite( drawPos.x,drawPos.y,spr,flipped,this.scale )
 			}
 		}
 	}
 	
-	DrawRect( worldPos,width,height,color )
+	DrawRect( worldPos,width,height,color,centered = false )
 	{
 		const rectRect = Rect.FromXYWH( 0,0,width,height )
-		if( this.camRect.OverlapsAt( rectRect,worldPos.Copy().Subtract( rectRect.GetHalfSize() ) ) )
+		const rectPos = worldPos.Copy()
+		if( centered ) rectPos.Subtract( rectRect.GetHalfSize().Scale( -1 ) )
+		rectRect.MoveTo( rectPos )
+		if( this.camRect.Overlaps( rectRect ) )
 		{
 			const drawPos = this.World2ScrPos( worldPos )
-				.Subtract( rectRect.GetHalfSize().Scale( this.scale * this.pixelSize ) )
+			if( centered ) drawPos.Subtract( rectRect.GetHalfSize().Scale( this.scale ) )
 			this.gfx.DrawRect( drawPos.x,drawPos.y,
-				rectRect.GetWidth() * this.scale * this.pixelSize,
-				rectRect.GetHeight() * this.scale * this.pixelSize,
+				rectRect.GetWidth() * this.scale,
+				rectRect.GetHeight() * this.scale,
 				color )
 		}
 	}
 	
 	DrawCamArea()
 	{
-		this.DrawRect( Vec2.Zero(),this.camRect.GetWidth(),this.camRect.GetHeight(),"#33CC77" )
+		this.camRect.Draw( this,"#33CC77" )
 	}
 	
 	Scr2WorldPos( screenPos )
 	{
 		return( screenPos.Copy().Subtract( this.screenHSize )
-			.Divide( ( this.scale != 0 ? this.scale : 1 ) * this.pixelSize ) )
+			.Divide( this.scale != 0 ? this.scale : 1 ) )
 	}
 	
 	World2ScrPos( worldPos )
 	{
-		return( worldPos.Copy().Scale( this.scale * this.pixelSize ).Add( this.screenHSize ) )
+		return( worldPos.Copy().Scale( this.scale ).Add( this.screenHSize ) )
 	}
 	
 	GetCamArea()
@@ -78,5 +83,3 @@ class NekoCam
 		return( this.camRect )
 	}
 }
-
-NekoCam.PixelSize = 24

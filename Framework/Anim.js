@@ -22,11 +22,11 @@ class Anim
 		return( false )
 	}
 	
-	Draw( pos,nekoCam,flipped = false )
+	Draw( pos,nekoCam,flipped = false,centered = true )
 	{
 		// this.sprs[this.curFrame.GetCurItem()].Draw( pos.x,pos.y,gfx,flipped )
 		nekoCam.DrawSprite( this.sprs[this.curFrame.GetCurItem()],
-			pos,flipped )
+			pos,flipped,centered )
 	}
 	
 	Reset()

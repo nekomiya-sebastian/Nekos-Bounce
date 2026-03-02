@@ -8,6 +8,11 @@ class Rect
 		this.right = right
 	}
 	
+	Draw( nekoCam,col = "#FF00FF" )
+	{
+		nekoCam.DrawRect( this.GetTopLeft(),this.GetWidth(),this.GetHeight(),col )
+	}
+	
 	MoveBy( move )
 	{
 		this.top += move.y
@@ -38,10 +43,32 @@ class Rect
 		this.left = left
 		this.right = right
 	}
-	
 	Set( other )
 	{
 		this.SetTBLR( other.top,other.bot,other.left,other.right )
+	}
+	
+	Expand( amount )
+	{
+		return( this.ExpandXY( Vec2.One().Scale( amount ) ) )
+	}
+	Shrink( amount )
+	{
+		return( this.ShrinkXY( Vec2.One().Scale( amount ) ) )
+	}
+	ExpandXY( amountVec )
+	{
+		const hAmount = amountVec.Copy().Divide( 2 )
+		this.left -= hAmount.x
+		this.top -= hAmount.y
+		this.right += hAmount.x
+		this.bot += hAmount.y
+		
+		return( this )
+	}
+	ShrinkXY( amountVec )
+	{
+		return( this.ExpandXY( amountVec.Copy().Scale( -1 ) ) )
 	}
 	
 	Contains( x,y )
@@ -54,12 +81,6 @@ class Rect
 	{
 		return( this.right > rect.left && this.left < rect.right &&
 			this.bot > rect.top && this.top < rect.bot )
-	}
-	
-	OverlapsAt( rect,pos )
-	{
-		return( this.right > rect.left + pos.x && this.left < rect.right + pos.x &&
-			this.bot > rect.top + pos.y && this.top < rect.bot + pos.y )
 	}
 	
 	ContainsRect( rect )
@@ -99,36 +120,10 @@ class Rect
 		return( new Vec2( this.left,this.top ) )
 	}
 	
-	GetPosList()
+	GetRandPos()
 	{
-		const posList = []
-		for( let y = this.top; y < this.bot; ++y )
-		{
-			for( let x = this.left; x < this.right; ++x )
-			{
-				posList.push( new Vec2( x,y ) )
-			}
-		}
-		return( posList )
-	}
-	
-	GetEdgeTiles()
-	{
-		const tiles = []
-		
-		for( let y = this.top; y <= this.bot; ++y )
-		{
-			tiles.push( new Vec2( this.left,y ) )
-			tiles.push( new Vec2( this.right,y ) )
-		}
-		
-		for( let x = this.left; x <= this.right; ++x )
-		{
-			tiles.push( new Vec2( x,this.top ) )
-			tiles.push( new Vec2( x,this.bot ) )
-		}
-		
-		return( tiles )
+		return( new Vec2( NekoUtils.RandFloat( this.left,this.right ),
+			NekoUtils.RandFloat( this.top,this.bot ) ) )
 	}
 	
 	Fix()
