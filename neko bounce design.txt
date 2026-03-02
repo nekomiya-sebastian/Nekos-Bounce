@@ -9,3 +9,6 @@ cat game where you click to make the cat jump
 	springs & trampolines that bounce you higher
 	hoops you can jump through to gain bonus points or smth
 	item you can pick up to restore jump
+	upgrade that boosts % chance to restore jump upon hitting bounce pad
+	maybe there are enemies moving back and forth higher up and if you hit them it stops your momentum
+		and stuns you for a second

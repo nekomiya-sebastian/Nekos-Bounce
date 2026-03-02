@@ -8,49 +8,47 @@ class Main
 		this.nekoCam = new NekoCam( this.gfx )
 		this.gfx.SetNekoCam( this.nekoCam )
 		
-		// this.testImg = new Sprite( "Images/Cat1.png" )
-		// this.imgPos = new Vec2( 0,0 )
+		const bounceAreaSize = 35
+		this.bounceArea = new Rect( -bounceAreaSize,bounceAreaSize,-bounceAreaSize,bounceAreaSize )
 		
 		this.bouncingNeko = new BouncingNeko( Vec2.Zero() )
 		
 		this.fishes = []
-		// these can spawn on the edge of the screen
 		Fish.spr.AddLoadFunc( this.SpawnFish,this )
-		
-		this.testHitbox = new Hitbox( 0,0,10,10 )
 	}
 	
 	Update( dt )
 	{
-		this.bouncingNeko.Update( this.mouse,this.nekoCam,dt )
+		this.bouncingNeko.Update( this.mouse,this.nekoCam,dt,this.bounceArea )
 		
 		for( let i = 0; i < this.fishes.length; ++i )
 		{
 			if( this.fishes[i].hitbox && this.bouncingNeko.hitbox.Overlaps( this.fishes[i].hitbox ) )
 			{
-				this.fishes[i].testCol = "green"
+				this.fishes[i] = this.fishes[this.fishes.length - 1]
+				this.fishes.pop()
+				this.SpawnFish( this )
 			}
-			else this.fishes[i].testCol = "blue"
 		}
 		
-		const mousePos = this.nekoCam.Scr2WorldPos( new Vec2( this.mouse.x,this.mouse.y  ) )
-		this.testHitbox.MoveTo( mousePos.x,mousePos.y )
+		const camMoveSpd = 1.5
+		if( this.kbd.IsKeyDown( "W" ) ) this.nekoCam.MoveCam( Vec2.Up().Scale( camMoveSpd * dt ) )
+		if( this.kbd.IsKeyDown( "S" ) ) this.nekoCam.MoveCam( Vec2.Down().Scale( camMoveSpd * dt ) )
+		if( this.kbd.IsKeyDown( "A" ) ) this.nekoCam.MoveCam( Vec2.Left().Scale( camMoveSpd * dt ) )
+		if( this.kbd.IsKeyDown( "D" ) ) this.nekoCam.MoveCam( Vec2.Right().Scale( camMoveSpd * dt ) )
 	}
 	
 	Draw()
 	{
 		this.nekoCam.DrawCamArea()
 		
-		// this.nekoCam.DrawSprite( this.testImg,this.imgPos )
+		this.bounceArea.Draw( this.nekoCam,"cyan" )
 		
 		for( const fish of this.fishes ) fish.Draw( this.nekoCam )
 		
 		this.bouncingNeko.Draw( this.nekoCam )
 		
-		this.testHitbox.Draw( this.nekoCam,this.bouncingNeko.hitbox.Overlaps( this.testHitbox )
-			? "green" : "red" )
-		
-		const mousePos = this.nekoCam.Scr2WorldPos( new Vec2( this.mouse.x,this.mouse.y ) )
+		const mousePos = this.nekoCam.GetMouseWorldPos( this.mouse )
 		this.nekoCam.DrawRect( mousePos,2,2,"red",true )
 	}
 	
@@ -58,7 +56,8 @@ class Main
 	{
 		if( !self.fishSpawnArea )
 		{
-			self.fishSpawnArea = self.nekoCam.GetCamArea().Copy().ShrinkXY( Fish.spr.GetSize() )
+			// self.fishSpawnArea = self.nekoCam.GetCamArea().Copy().ShrinkXY( Fish.spr.GetSize() )
+			self.fishSpawnArea = self.bounceArea.Copy().ShrinkXY( Fish.spr.GetSize() )
 		}
 		
 		self.fishes.push( new Fish( self.fishSpawnArea.GetRandPos() ) )

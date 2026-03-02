@@ -20,23 +20,23 @@ class BouncingNeko
 		this.jumping = false
 	}
 	
-	Update( mouse,nekoCam,dt )
+	Update( mouse,nekoCam,dt,bounceArea )
 	{
 		if( this.loaded )
 		{
 			this.idleAnim.Update( dt )
 			
-			const mousePos = nekoCam.Scr2WorldPos( new Vec2( mouse.x,mouse.y ) )
+			const mousePos = nekoCam.GetMouseWorldPos( mouse )
 			if( mouse.down && !this.jumping ) this.Jump( mousePos )
 			
 			const testPos = this.pos.Copy().Add( this.vel.Copy().Scale( dt ) )
 			
 			let canMove = true
 			
-			if( testPos.x < nekoCam.GetCamArea().left + this.hSize.x ) this.vel.x = Math.abs( this.vel.x )
-			else if( testPos.x > nekoCam.GetCamArea().right - this.hSize.x ) this.vel.x = -Math.abs( this.vel.x )
+			if( testPos.x < bounceArea.left + this.hSize.x ) this.vel.x = Math.abs( this.vel.x )
+			else if( testPos.x > bounceArea.right - this.hSize.x ) this.vel.x = -Math.abs( this.vel.x )
 			
-			if( testPos.y > nekoCam.GetCamArea().bot - this.hSize.y )
+			if( testPos.y > bounceArea.bot - this.hSize.y )
 			{
 				this.vel.SetXY( 0,0 )
 				canMove = false
