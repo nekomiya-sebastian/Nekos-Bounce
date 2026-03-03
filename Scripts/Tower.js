@@ -9,6 +9,9 @@ class Tower
 		
 		this.tiles = []
 		
+		// how many tiles "above" to load when scrolling up - should be at least 1 for rendering
+		this.loadBufferDist = 5
+		
 		this.tileSize = Vec2.One().Scale( 24 )
 		this.width = -1
 		this.baseHeight = -1 // size of # of tiles shown on screen
@@ -28,21 +31,15 @@ class Tower
 			const yOffset = this.CalcCamYOffset( nekoCam )
 			const hHeight = Math.floor( this.baseHeight / 2 )
 			const yDiff = hHeight - yOffset
-			if( this.curHeight < this.baseHeight + yDiff + 1 )
+			if( this.curHeight < this.baseHeight + yDiff + this.loadBufferDist )
 			{
 				// console.log( "load new area!" )
 				this.LoadNewRow()
 			}
 			
-			// // loads new rows when scrolling down
-			// const yOffset = this.CalcCamYOffset( nekoCam )
-			// const hHeight = Math.floor( this.baseHeight / 2 )
-			// const yDiff = hHeight - yOffset
-			// if( this.curHeight < this.baseHeight - yDiff )
-			// {
-			// 	// console.log( "load new area!" )
-			// 	this.LoadNewRow()
-			// }
+			// const mousePos = nekoCam.GetMouseWorldPos( mouse )
+			// const mouseTilePos = this.World2TilePos( mousePos )
+			// if( mouse.down ) this.SetTile( mouseTilePos.x,mouseTilePos.y,1 )
 		}
 		else
 		{
@@ -79,7 +76,7 @@ class Tower
 			{
 				for( let x = 0; x < this.width; ++x )
 				{
-					const curTile = this.GetTileReverse( x,tileY )
+					const curTile = this.GetTile( x,tileY )
 					
 					nekoCam.DrawSprite( this.tileSprs[curTile],
 						new Vec2( x * this.tileSize.x,y * this.tileSize.y ),
@@ -101,7 +98,7 @@ class Tower
 		NekoUtils.Assert( this.baseHeight == Math.floor( this.baseHeight ),
 			"Invalid screen height! " + this.baseHeight )
 		
-		console.log( "tower dims: " + this.width + " " + this.baseHeight )
+		// console.log( "tower dims: " + this.width + " " + this.baseHeight )
 		
 		// just load the screen area worth of rows
 		for( let y = 0; y < this.baseHeight; ++y ) this.LoadNewRow()
@@ -128,16 +125,16 @@ class Tower
 		}
 	}
 	
-	GetTile( x,y )
+	SetTile( x,y,val )
 	{
 		NekoUtils.Assert( x >= 0 && x < this.width && y >= 0 && y < this.curHeight,
-			"Invalid Tower.GetTile coords! x: " + x + ", y: " + y +
+			"Invalid Tower.SetTile coords! x: " + x + ", y: " + y +
 			", width: " + this.width + ", cur height: " + this.curHeight )
 		
-		return( this.tiles[y * this.width + x] )
+		this.tiles[( this.curHeight - y - 1 ) * this.width + x] = val
 	}
 	// counts y backwards
-	GetTileReverse( x,y )
+	GetTile( x,y )
 	{
 		NekoUtils.Assert( x >= 0 && x < this.width && y >= 0 && y < this.curHeight,
 			"Invalid Tower.GetTile coords! x: " + x + ", y: " + y +
@@ -149,5 +146,19 @@ class Tower
 	CalcCamYOffset( nekoCam )
 	{
 		return( Math.floor( nekoCam.GetCamPos().y / this.tileSize.y ) )
+	}
+	
+	World2TilePos( worldPos )
+	{
+		return( worldPos.Copy().DivideVec( this.tileSize )
+			.Add( Vec2.Down().Scale( this.curHeight - this.baseHeight ) )
+			.Floorify() )
+	}
+	
+	Tile2WorldPos( tilePos,centered = true )
+	{
+		return( tilePos.Copy().Subtract( Vec2.Down().Scale( this.curHeight - this.baseHeight ) )
+			.MultiplyVec( this.tileSize )
+			.Add( centered ? Vec2.One().MultiplyVec( this.tileSize.Copy().Divide( 2 ) ) : Vec2.Zero() ) )
 	}
 }

@@ -10,34 +10,38 @@ class Main
 		
 		this.tower = new Tower()
 		
-		const bounceAreaSize = 35
-		this.bounceArea = new Rect( -bounceAreaSize,bounceAreaSize,-bounceAreaSize,bounceAreaSize )
+		// const bounceAreaSize = 35
+		// this.bounceArea = new Rect( -bounceAreaSize,bounceAreaSize,-bounceAreaSize,bounceAreaSize )
 		
-		this.bouncingNeko = new BouncingNeko( Vec2.Zero() )
+		this.bouncingNeko = new BouncingNeko( new Vec2( 3,6 ).Scale( NekoCam.PixelSize )
+			.Add( Vec2.One().Scale( NekoCam.PixelSize / 2 ) ) )
 		
-		this.fishes = []
-		Fish.spr.AddLoadFunc( this.SpawnFish,this )
+		// this.fishes = []
+		// Fish.spr.AddLoadFunc( this.SpawnFish,this )
+		
+		this.maxCamScroll = this.nekoCam.GetCamArea().GetHeight() / 2
 	}
 	
 	Update( dt )
 	{
 		this.tower.Update( this.nekoCam )
 		
-		this.bouncingNeko.Update( this.mouse,this.nekoCam,dt,this.bounceArea )
+		this.bouncingNeko.Update( this.mouse,this.nekoCam,dt,this.tower )
 		
-		for( let i = 0; i < this.fishes.length; ++i )
-		{
-			if( this.fishes[i].hitbox && this.bouncingNeko.hitbox.Overlaps( this.fishes[i].hitbox ) )
-			{
-				this.fishes[i] = this.fishes[this.fishes.length - 1]
-				this.fishes.pop()
-				this.SpawnFish( this )
-			}
-		}
+		// for( let i = 0; i < this.fishes.length; ++i )
+		// {
+		// 	if( this.fishes[i].hitbox && this.bouncingNeko.hitbox.Overlaps( this.fishes[i].hitbox ) )
+		// 	{
+		// 		this.fishes[i] = this.fishes[this.fishes.length - 1]
+		// 		this.fishes.pop()
+		// 		this.SpawnFish( this )
+		// 	}
+		// }
 		
 		const camMoveSpd = 8.5
 		if( this.kbd.IsKeyDown( "W" ) ) this.nekoCam.MoveCam( Vec2.Up().Scale( camMoveSpd * dt ) )
 		if( this.kbd.IsKeyDown( "S" ) ) this.nekoCam.MoveCam( Vec2.Down().Scale( camMoveSpd * dt ) )
+		if( this.nekoCam.camPos.y > this.maxCamScroll ) this.nekoCam.camPos.y = this.maxCamScroll
 		// if( this.kbd.IsKeyDown( "A" ) ) this.nekoCam.MoveCam( Vec2.Left().Scale( camMoveSpd * dt ) )
 		// if( this.kbd.IsKeyDown( "D" ) ) this.nekoCam.MoveCam( Vec2.Right().Scale( camMoveSpd * dt ) )
 	}
@@ -50,24 +54,24 @@ class Main
 		
 		// this.bounceArea.Draw( this.nekoCam,"cyan" )
 		
-		for( const fish of this.fishes ) fish.Draw( this.nekoCam )
+		// for( const fish of this.fishes ) fish.Draw( this.nekoCam )
 		
-		this.bouncingNeko.Draw( this.nekoCam )
+		this.bouncingNeko.Draw( this.nekoCam,this.tower )
 		
 		const mousePos = this.nekoCam.GetMouseWorldPos( this.mouse )
 		this.nekoCam.DrawRect( mousePos,2,2,"red",true )
 	}
 	
-	SpawnFish( self )
-	{
-		if( !self.fishSpawnArea )
-		{
-			// self.fishSpawnArea = self.nekoCam.GetCamArea().Copy().ShrinkXY( Fish.spr.GetSize() )
-			self.fishSpawnArea = self.bounceArea.Copy().ShrinkXY( Fish.spr.GetSize() )
-		}
-		
-		self.fishes.push( new Fish( self.fishSpawnArea.GetRandPos() ) )
-	}
+	// SpawnFish( self )
+	// {
+	// 	if( !self.fishSpawnArea )
+	// 	{
+	// 		// self.fishSpawnArea = self.nekoCam.GetCamArea().Copy().ShrinkXY( Fish.spr.GetSize() )
+	// 		self.fishSpawnArea = self.bounceArea.Copy().ShrinkXY( Fish.spr.GetSize() )
+	// 	}
+	// 	
+	// 	self.fishes.push( new Fish( self.fishSpawnArea.GetRandPos() ) )
+	// }
 }
 
 const delay = 1000.0 / 60.0

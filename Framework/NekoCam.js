@@ -5,7 +5,7 @@ class NekoCam
 		this.gfx = gfx
 		
 		// modifiable vals
-		const pixelSize = 24 // # of pixels per unit
+		const pixelSize = NekoCam.PixelSize // # of pixels per unit
 		this.camSize = new Vec2( 7,9 ).Scale( pixelSize )
 		
 		this.camPos = Vec2.Zero().Add( this.camSize.Copy().Divide( 2 ) )
@@ -56,7 +56,7 @@ class NekoCam
 		}
 	}
 	
-	DrawRect( worldPos,width,height,color,centered = false,test = false )
+	DrawRect( worldPos,width,height,color,centered = false )
 	{
 		const rectRect = Rect.FromXYWH( 0,0,width,height )
 		const rectPos = worldPos.Copy()
@@ -110,3 +110,5 @@ class NekoCam
 		return( this.camPos )
 	}
 }
+
+NekoCam.PixelSize = 24

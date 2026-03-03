@@ -30,10 +30,26 @@ class Vec2
 		return( this )
 	}
 	
+	MultiplyVec( otherVec )
+	{
+		this.x *= otherVec.x
+		this.y *= otherVec.y
+		
+		return( this )
+	}
+	
 	Divide( amount )
 	{
 		this.x /= amount
 		this.y /= amount
+		
+		return( this )
+	}
+	
+	DivideVec( otherVec )
+	{
+		this.x /= otherVec.x
+		this.y /= otherVec.y
 		
 		return( this )
 	}
@@ -45,12 +61,18 @@ class Vec2
 		
 		return( this )
 	}
+	Ceilify()
+	{
+		this.x = Math.ceil( this.x )
+		this.y = Math.ceil( this.y )
+		
+		return( this )
+	}
 	
 	Set( other )
 	{
 		this.SetXY( other.x,other.y )
 	}
-	
 	SetXY( x,y )
 	{
 		this.x = x
@@ -108,7 +130,6 @@ Vec2.Zero = function()
 {
 	return( new Vec2( 0,0 ) )
 }
-
 Vec2.One = function()
 {
 	return( new Vec2( 1,1 ) )
@@ -118,18 +139,24 @@ Vec2.Up = function()
 {
 	return( new Vec2( 0,-1 ) )
 }
-
 Vec2.Down = function()
 {
 	return( new Vec2( 0,1 ) )
 }
-
 Vec2.Left = function()
 {
 	return( new Vec2( -1,0 ) )
 }
-
 Vec2.Right = function()
 {
 	return( new Vec2( 1,0 ) )
+}
+
+Vec2.Cardinals = function()
+{
+	return( [ Vec2.Up(),Vec2.Down(),Vec2.Left(),Vec2.Right() ] )
+}
+Vec2.Ordinals = function()
+{
+	return( [ new Vec2( -1,-1 ),new Vec2( 1,-1 ),new Vec2( -1,1 ),new Vec2( 1,1 ) ] )
 }
