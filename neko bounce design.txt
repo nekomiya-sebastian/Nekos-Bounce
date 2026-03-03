@@ -5,10 +5,23 @@ cat game where you click to make the cat jump
 	maybe you go up and up on a tower - each try you restart from the bottom, upgrades let you
 		get more points or get higher with each jump
 	
-	something you can hit that spawns more bouncy nekos
-	springs & trampolines that bounce you higher
-	hoops you can jump through to gain bonus points or smth
-	item you can pick up to restore jump
 	upgrade that boosts % chance to restore jump upon hitting bounce pad
-	maybe there are enemies moving back and forth higher up and if you hit them it stops your momentum
-		and stuns you for a second
+	maybe have an upgrade that reduces the chance that items are consumed after interacting
+	
+	how do we obtain items? maybe a buy round after the end of each bounce session?
+		like a shop with a choice of random upgrades to purchase
+	
+	*IMPORTANT!! items like bounce pads are REMOVED after interacted with
+		so you have the game flow of going up, then falling all the way back down (where the round ends)
+	
+	items
+		fish - pickup as main form of currency
+		spikey - red spikey guy that stops your momentum (and maybe stuns you for a second) (spawns every 25)
+	
+	upgrades
+		worm - pickup to restore jump (spawns every 9 tiles)
+		ball of yarn - spawns a swarm of 3 nekos on hit (spawns every 10 tiles)
+		spring - bounces you up once upon hitting it (spawns every 6 tiles)
+		hoop - gives 3-5 fish when you pass through it (repeatable) (spawns every 15 tiles)
+		shield - protects you from 1 spikey & removes it
+		paintbrush - give your kitty a pretty rainbow trail for a few seconds after picking up (spawns every 33)

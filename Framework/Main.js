@@ -8,6 +8,8 @@ class Main
 		this.nekoCam = new NekoCam( this.gfx )
 		this.gfx.SetNekoCam( this.nekoCam )
 		
+		this.tower = new Tower()
+		
 		const bounceAreaSize = 35
 		this.bounceArea = new Rect( -bounceAreaSize,bounceAreaSize,-bounceAreaSize,bounceAreaSize )
 		
@@ -19,6 +21,8 @@ class Main
 	
 	Update( dt )
 	{
+		this.tower.Update( this.nekoCam )
+		
 		this.bouncingNeko.Update( this.mouse,this.nekoCam,dt,this.bounceArea )
 		
 		for( let i = 0; i < this.fishes.length; ++i )
@@ -31,18 +35,20 @@ class Main
 			}
 		}
 		
-		const camMoveSpd = 1.5
+		const camMoveSpd = 8.5
 		if( this.kbd.IsKeyDown( "W" ) ) this.nekoCam.MoveCam( Vec2.Up().Scale( camMoveSpd * dt ) )
 		if( this.kbd.IsKeyDown( "S" ) ) this.nekoCam.MoveCam( Vec2.Down().Scale( camMoveSpd * dt ) )
-		if( this.kbd.IsKeyDown( "A" ) ) this.nekoCam.MoveCam( Vec2.Left().Scale( camMoveSpd * dt ) )
-		if( this.kbd.IsKeyDown( "D" ) ) this.nekoCam.MoveCam( Vec2.Right().Scale( camMoveSpd * dt ) )
+		// if( this.kbd.IsKeyDown( "A" ) ) this.nekoCam.MoveCam( Vec2.Left().Scale( camMoveSpd * dt ) )
+		// if( this.kbd.IsKeyDown( "D" ) ) this.nekoCam.MoveCam( Vec2.Right().Scale( camMoveSpd * dt ) )
 	}
 	
 	Draw()
 	{
-		this.nekoCam.DrawCamArea()
+		// this.nekoCam.DrawCamArea()
 		
-		this.bounceArea.Draw( this.nekoCam,"cyan" )
+		this.tower.Draw( this.nekoCam )
+		
+		// this.bounceArea.Draw( this.nekoCam,"cyan" )
 		
 		for( const fish of this.fishes ) fish.Draw( this.nekoCam )
 		

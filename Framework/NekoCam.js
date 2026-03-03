@@ -6,9 +6,9 @@ class NekoCam
 		
 		// modifiable vals
 		const pixelSize = 24 // # of pixels per unit
-		this.camSize = new Vec2( 5,3.5 ).Scale( pixelSize )
+		this.camSize = new Vec2( 7,9 ).Scale( pixelSize )
 		
-		this.camPos = Vec2.Zero()
+		this.camPos = Vec2.Zero().Add( this.camSize.Copy().Divide( 2 ) )
 		const camHSize = this.camSize.Copy().Divide( 2 )
 		this.camRect = new Rect( -camHSize.y,camHSize.y,-camHSize.x,camHSize.x )
 		// this.screenRect = new Rect( 0,gfx.height,0,gfx.width )
@@ -17,6 +17,8 @@ class NekoCam
 		this.screenHSize = new Vec2( gfx.width / 2,gfx.height / 2 )
 		
 		this.OnResize( this )
+		
+		this.MoveCam( Vec2.Zero() )
 	}
 	
 	OnResize( self )
@@ -101,5 +103,10 @@ class NekoCam
 	GetCamArea()
 	{
 		return( this.camRect )
+	}
+	
+	GetCamPos()
+	{
+		return( this.camPos )
 	}
 }
